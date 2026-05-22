@@ -82,6 +82,9 @@ export default function SalesPage() {
     const [itemForm, setItemForm] = useState({ productName: "", quantity: 1, notes: "" });
     const [itemUpdating, setItemUpdating] = useState(false);
 
+    // Tab đang hoạt động trên Mobile ('bills', 'menu', 'cart')
+    const [activeMobileTab, setActiveMobileTab] = useState("menu");
+
     // --- Helper: Lấy giá sản phẩm ---
     const getProductPrice = (productName) => {
         const product = allProducts.find((p) => p.productName === productName);
@@ -319,6 +322,7 @@ export default function SalesPage() {
                  setOrderForm(createEmptyOrderForm());
                  setShowCreateModal(false);
                  setCreateOrderSuccess("");
+                 setActiveMobileTab("cart");
             }, 1000);
 
         } catch (err) {
@@ -495,9 +499,34 @@ export default function SalesPage() {
                 }
             />
 
+            {/* Thanh chuyển tab trên di động */}
+            <div className="d-flex d-md-none mobile-pos-tabs mb-3 align-items-center">
+                <button
+                    type="button"
+                    className={`mobile-pos-tab-btn ${activeMobileTab === "bills" ? "active" : ""}`}
+                    onClick={() => setActiveMobileTab("bills")}
+                >
+                    <i className="bi bi-receipt me-1"></i> Hóa đơn ({orders.length})
+                </button>
+                <button
+                    type="button"
+                    className={`mobile-pos-tab-btn ${activeMobileTab === "menu" ? "active" : ""}`}
+                    onClick={() => setActiveMobileTab("menu")}
+                >
+                    <i className="bi bi-cup-hot me-1"></i> Thực đơn
+                </button>
+                <button
+                    type="button"
+                    className={`mobile-pos-tab-btn ${activeMobileTab === "cart" ? "active" : ""}`}
+                    onClick={() => setActiveMobileTab("cart")}
+                >
+                    <i className="bi bi-cart me-1"></i> Chi tiết {selectedOrder?.tableNumber ? `(Bàn ${selectedOrder.tableNumber})` : ""}
+                </button>
+            </div>
+
             <div className="row g-3">
                 {/* 1. DANH SÁCH HÓA ĐƠN */}
-                <div className="col-md-3">
+                <div className={`col-12 col-md-3 d-md-block ${activeMobileTab === "bills" ? "d-block" : "d-none"}`}>
                     <div className="card shadow-sm border-0 h-100">
                         <div className="card-header bg-white border-bottom py-3">
                             <h6 className="mb-0">Hóa đơn ({orders.length})</h6>
@@ -517,7 +546,10 @@ export default function SalesPage() {
                             {orders.map((order) => (
                                 <button
                                     key={order.orderId}
-                                    onClick={() => setSelectedOrderId(order.orderId)}
+                                    onClick={() => {
+                                        setSelectedOrderId(order.orderId);
+                                        setActiveMobileTab("cart");
+                                    }}
                                     className={`list-group-item list-group-item-action ${
                                         selectedOrderId === order.orderId ? "active" : ""
                                     }`}
@@ -557,7 +589,7 @@ export default function SalesPage() {
                 </div>
 
                 {/* 2. MENU SẢN PHẨM */}
-                <div className="col-md-5">
+                                <div className={`col-12 col-md-5 d-md-block ${activeMobileTab === "menu" ? "d-block" : "d-none"}`}>
                     <div className="card shadow-sm border-0 h-100">
                         <div className="card-body d-flex flex-column">
                             <h6 className="mb-3">Thực đơn</h6>
@@ -624,7 +656,7 @@ export default function SalesPage() {
                 </div>
 
                 {/* 3. CHI TIẾT HÓA ĐƠN */}
-                <div className="col-md-4">
+                <div className={`col-12 col-md-4 d-md-block ${activeMobileTab === "cart" ? "d-block" : "d-none"}`}>
                     <div className="card shadow-sm border-0 h-100">
                         <div className="card-body d-flex flex-column">
                             <h6 className="border-bottom pb-2 mb-3">
@@ -919,10 +951,10 @@ export default function SalesPage() {
                                 </div>
                             )}
 
-                            <div className="modal-body p-0 flex-grow-1 overflow-hidden bg-light">
-                                <div className="row g-0 h-100">
+                            <div className="modal-body p-0 flex-grow-1 overflow-auto bg-light">
+                                <div className="row g-0 h-100 flex-column flex-md-row">
                                     {/* CỘT 1: CẤU HÌNH (Bàn, Thanh toán) */}
-                                    <div className="col-md-3 bg-white border-end d-flex flex-column p-3 h-100 overflow-auto">
+                                    <div className="col-12 col-md-3 bg-white border-end d-flex flex-column p-3 modal-pos-column overflow-auto">
                                         <div className="mb-4">
                                             <label className="form-label fw-bold text-dark">Bàn ({availableTables.length} trống)</label>
                                             <select
@@ -973,7 +1005,7 @@ export default function SalesPage() {
                                     </div>
 
                                     {/* CỘT 2: THỰC ĐƠN (Grid Sản phẩm) */}
-                                    <div className="col-md-5 bg-white border-end d-flex flex-column h-100">
+                                    <div className="col-12 col-md-5 bg-white border-end d-flex flex-column modal-pos-column">
                                         <div className="p-3 border-bottom flex-shrink-0">
                                             <label className="fw-bold mb-2 d-block">Thực đơn</label>
                                             <div className="d-flex gap-2 overflow-auto pb-1" style={{scrollbarWidth: 'thin'}}>
@@ -1023,7 +1055,7 @@ export default function SalesPage() {
                                     </div>
 
                                     {/* CỘT 3: ĐÃ CHỌN (Giỏ hàng) */}
-                                    <div className="col-md-4 bg-white d-flex flex-column h-100">
+                                    <div className="col-12 col-md-4 bg-white d-flex flex-column modal-pos-column">
                                         <div className="p-3 border-bottom d-flex justify-content-between align-items-center flex-shrink-0">
                                             <label className="fw-bold mb-0">Đã chọn</label>
                                             <span className="badge bg-secondary">{orderForm.items.length} món</span>

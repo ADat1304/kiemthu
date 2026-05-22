@@ -7,7 +7,10 @@ import lombok.experimental.FieldDefaults;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "OrderDetails")
+@Table(name = "OrderDetails",
+        indexes = {
+                @Index(name = "idx_order_detail_order", columnList = "orderID")
+        })
 @IdClass(OrderDetailId.class)
 @Getter
 @Setter

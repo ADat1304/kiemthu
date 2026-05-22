@@ -5,7 +5,10 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "cafetable")
+@Table(name = "cafetable",
+        indexes = {
+                @Index(name = "idx_table_number", columnList = "tableNumber")
+        })
 @Getter
 @Setter
 @NoArgsConstructor

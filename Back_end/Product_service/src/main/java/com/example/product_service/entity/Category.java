@@ -7,7 +7,10 @@ import lombok.experimental.FieldDefaults;
 import java.util.Set;
 
 @Entity
-@Table(name = "category")
+@Table(name = "category",
+        indexes = {
+                @Index(name = "idx_category_name", columnList = "categoryName")
+        })
 @Getter
 @Setter
 @NoArgsConstructor

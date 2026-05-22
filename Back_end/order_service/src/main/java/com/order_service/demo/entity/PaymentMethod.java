@@ -6,7 +6,10 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "PaymentMethod")
+@Table(name = "PaymentMethod",
+        indexes = {
+                @Index(name = "idx_payment_method_type", columnList = "paymentMethodType")
+        })
 @Getter
 @Setter
 @NoArgsConstructor

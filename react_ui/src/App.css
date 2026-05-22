@@ -295,3 +295,98 @@ body {
     font-size: 14px;
     margin: 0;
 }
+
+/* --- RESPONSIVE SIDEBAR FOR MOBILE --- */
+@media (max-width: 767.98px) {
+    .sidebar-wrapper {
+        position: fixed !important;
+        top: 0;
+        left: -240px;
+        z-index: 1045;
+        height: 100vh;
+        width: 240px;
+        min-width: 240px !important;
+        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 4px 0 24px rgba(0,0,0,0.15);
+    }
+    .sidebar-wrapper.show {
+        left: 0 !important;
+    }
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.4);
+        z-index: 1040;
+        animation: fadeInOverlay 0.25s ease-out;
+        backdrop-filter: blur(2px);
+    }
+    @keyframes fadeInOverlay {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    /* Optimize padding on mobile */
+    .btn {
+        padding: 0.4rem 0.8rem !important;
+        font-size: 0.9rem !important;
+    }
+    .form-control, .form-select {
+        padding: 0.5rem 0.8rem !important;
+        font-size: 0.9rem !important;
+    }
+    
+    .revenue-chart-svg {
+        min-width: 550px;
+    }
+}
+
+/* --- TAB SWITCHER FOR MOBILE POS --- */
+.mobile-pos-tabs {
+    background-color: #fff;
+    border-radius: var(--radius-md);
+    padding: 6px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+}
+.mobile-pos-tab-btn {
+    border: none;
+    background: transparent;
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-gray);
+    border-radius: 8px;
+    transition: all 0.2s;
+    flex: 1;
+    text-align: center;
+}
+.mobile-pos-tab-btn.active {
+    background-color: var(--primary-bg-subtle) !important;
+    color: var(--primary-color) !important;
+}
+
+/* Modals responsive POS columns */
+.modal-pos-column {
+    height: 100%;
+}
+@media (max-width: 767.98px) {
+    .modal-pos-column {
+        height: 350px !important;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .modal-pos-column:last-child {
+        border-bottom: none;
+    }
+}
+
+
+
+
+
+
+
+
+

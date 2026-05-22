@@ -61,178 +61,180 @@ const DailyRevenueBarChart = ({ data }) => {
                 </div>
             </div>
             <div className="position-relative" onMouseLeave={() => setHoveredIdx(null)}>
-                <svg
-                    width="100%"
-                    height={svgHeight}
-                    viewBox={`0 0 ${svgWidth} ${svgHeight}`}
-                    className="revenue-chart-svg"
-                >
-                    <defs>
-                        <linearGradient id="dashBarGradient" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stopColor="#10b981" />
-                            <stop offset="100%" stopColor="#059669" />
-                        </linearGradient>
-                        <linearGradient id="dashBarGradientHover" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stopColor="#34d399" />
-                            <stop offset="100%" stopColor="#10b981" />
-                        </linearGradient>
-                        <linearGradient id="dashAreaGradient" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stopColor="#10b981" stopOpacity="0.08" />
-                            <stop offset="100%" stopColor="#10b981" stopOpacity="0.0" />
-                        </linearGradient>
-                        <filter id="dashBarShadow" x="-20%" y="-10%" width="140%" height="130%">
-                            <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#059669" floodOpacity="0.2" />
-                        </filter>
-                        <filter id="dashBarGlow" x="-50%" y="-50%" width="200%" height="200%">
-                            <feDropShadow dx="0" dy="0" stdDeviation="5" floodColor="#34d399" floodOpacity="0.3" />
-                        </filter>
-                    </defs>
+                <div className="revenue-chart-scroll">
+                    <svg
+                        width="100%"
+                        height={svgHeight}
+                        viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+                        className="revenue-chart-svg"
+                    >
+                        <defs>
+                            <linearGradient id="dashBarGradient" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor="#10b981" />
+                                <stop offset="100%" stopColor="#059669" />
+                            </linearGradient>
+                            <linearGradient id="dashBarGradientHover" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor="#34d399" />
+                                <stop offset="100%" stopColor="#10b981" />
+                            </linearGradient>
+                            <linearGradient id="dashAreaGradient" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor="#10b981" stopOpacity="0.08" />
+                                <stop offset="100%" stopColor="#10b981" stopOpacity="0.0" />
+                            </linearGradient>
+                            <filter id="dashBarShadow" x="-20%" y="-10%" width="140%" height="130%">
+                                <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#059669" floodOpacity="0.2" />
+                            </filter>
+                            <filter id="dashBarGlow" x="-50%" y="-50%" width="200%" height="200%">
+                                <feDropShadow dx="0" dy="0" stdDeviation="5" floodColor="#34d399" floodOpacity="0.3" />
+                            </filter>
+                        </defs>
 
-                    {/* Area fill behind bars */}
-                    <path
-                        d={(() => {
-                            let path = `M ${margin.left + step / 2} ${baselineY}`;
-                            data.forEach((day, idx) => {
-                                const ratio = day.value / niceMax;
-                                const cx = margin.left + idx * step + step / 2;
-                                const cy = baselineY - (day.value ? innerHeight * ratio : 0);
-                                path += ` L ${cx} ${cy}`;
-                            });
-                            const lastX = margin.left + (data.length - 1) * step + step / 2;
-                            path += ` L ${lastX} ${baselineY} Z`;
-                            return path;
-                        })()}
-                        fill="url(#dashAreaGradient)"
-                    />
+                        {/* Area fill behind bars */}
+                        <path
+                            d={(() => {
+                                let path = `M ${margin.left + step / 2} ${baselineY}`;
+                                data.forEach((day, idx) => {
+                                    const ratio = day.value / niceMax;
+                                    const cx = margin.left + idx * step + step / 2;
+                                    const cy = baselineY - (day.value ? innerHeight * ratio : 0);
+                                    path += ` L ${cx} ${cy}`;
+                                });
+                                const lastX = margin.left + (data.length - 1) * step + step / 2;
+                                path += ` L ${lastX} ${baselineY} Z`;
+                                return path;
+                            })()}
+                            fill="url(#dashAreaGradient)"
+                        />
 
-                    {/* Grid lines */}
-                    {ticks.map((tickVal, i) => {
-                        const y = margin.top + innerHeight * (1 - tickVal / niceMax);
-                        return (
-                            <g key={i}>
-                                <line
-                                    x1={margin.left}
-                                    y1={y}
-                                    x2={svgWidth - margin.right}
-                                    y2={y}
-                                    stroke="#e2e8f0"
-                                    strokeWidth="1"
-                                    strokeDasharray="4 4"
-                                />
-                                <text
-                                    x={margin.left - 10}
-                                    y={y + 3}
-                                    textAnchor="end"
-                                    fontSize="10"
-                                    fill="#94a3b8"
-                                    fontFamily="var(--font-main)"
-                                    fontWeight="500"
-                                >
-                                    {formatCompact(Math.round(tickVal))}
-                                </text>
-                            </g>
-                        );
-                    })}
+                        {/* Grid lines */}
+                        {ticks.map((tickVal, i) => {
+                            const y = margin.top + innerHeight * (1 - tickVal / niceMax);
+                            return (
+                                <g key={i}>
+                                    <line
+                                        x1={margin.left}
+                                        y1={y}
+                                        x2={svgWidth - margin.right}
+                                        y2={y}
+                                        stroke="#e2e8f0"
+                                        strokeWidth="1"
+                                        strokeDasharray="4 4"
+                                    />
+                                    <text
+                                        x={margin.left - 10}
+                                        y={y + 3}
+                                        textAnchor="end"
+                                        fontSize="10"
+                                        fill="#94a3b8"
+                                        fontFamily="var(--font-main)"
+                                        fontWeight="500"
+                                    >
+                                        {formatCompact(Math.round(tickVal))}
+                                    </text>
+                                </g>
+                            );
+                        })}
 
-                    {/* Baseline (X-axis) */}
-                    <line
-                        x1={margin.left}
-                        y1={baselineY}
-                        x2={svgWidth - margin.right}
-                        y2={baselineY}
-                        stroke="#cbd5e1"
-                        strokeWidth="1.5"
-                    />
-                    {/* Y-axis line */}
-                    <line
-                        x1={margin.left}
-                        y1={margin.top}
-                        x2={margin.left}
-                        y2={baselineY}
-                        stroke="#cbd5e1"
-                        strokeWidth="1.5"
-                    />
+                        {/* Baseline (X-axis) */}
+                        <line
+                            x1={margin.left}
+                            y1={baselineY}
+                            x2={svgWidth - margin.right}
+                            y2={baselineY}
+                            stroke="#cbd5e1"
+                            strokeWidth="1.5"
+                        />
+                        {/* Y-axis line */}
+                        <line
+                            x1={margin.left}
+                            y1={margin.top}
+                            x2={margin.left}
+                            y2={baselineY}
+                            stroke="#cbd5e1"
+                            strokeWidth="1.5"
+                        />
 
-                    {/* Columns */}
-                    {data.map((day, idx) => {
-                        const ratio = day.value / niceMax;
-                        const barHeight = day.value ? innerHeight * ratio : 0;
-                        const x = margin.left + idx * step + (step - barWidth) / 2;
-                        const y = baselineY - barHeight;
-                        const centerX = margin.left + idx * step + step / 2;
-                        const isHovered = hoveredIdx === idx;
+                        {/* Columns */}
+                        {data.map((day, idx) => {
+                            const ratio = day.value / niceMax;
+                            const barHeight = day.value ? innerHeight * ratio : 0;
+                            const x = margin.left + idx * step + (step - barWidth) / 2;
+                            const y = baselineY - barHeight;
+                            const centerX = margin.left + idx * step + step / 2;
+                            const isHovered = hoveredIdx === idx;
 
-                        return (
-                            <g key={day.key}>
-                                {/* Hover highlight column */}
-                                <rect
-                                    x={margin.left + idx * step}
-                                    y={margin.top}
-                                    width={step}
-                                    height={innerHeight}
-                                    fill={isHovered ? '#ecfdf5' : 'transparent'}
-                                    opacity={isHovered ? 1 : 0}
-                                    rx="6"
-                                    style={{ transition: 'opacity 0.15s ease' }}
-                                />
-
-                                {/* Bar */}
-                                {day.value > 0 && (
+                            return (
+                                <g key={day.key}>
+                                    {/* Hover highlight column */}
                                     <rect
-                                        x={x}
-                                        y={y}
-                                        width={barWidth}
-                                        height={barHeight}
+                                        x={margin.left + idx * step}
+                                        y={margin.top}
+                                        width={step}
+                                        height={innerHeight}
+                                        fill={isHovered ? '#ecfdf5' : 'transparent'}
+                                        opacity={isHovered ? 1 : 0}
                                         rx="6"
-                                        fill={isHovered ? 'url(#dashBarGradientHover)' : 'url(#dashBarGradient)'}
-                                        filter={isHovered ? 'url(#dashBarGlow)' : 'url(#dashBarShadow)'}
-                                        className="revenue-bar"
-                                        style={{
-                                            transformOrigin: `${centerX}px ${baselineY}px`,
-                                            transition: 'fill 0.2s ease, filter 0.2s ease',
-                                        }}
+                                        style={{ transition: 'opacity 0.15s ease' }}
                                     />
-                                )}
 
-                                {/* Dot if 0 */}
-                                {day.value === 0 && (
-                                    <circle
-                                        cx={centerX}
-                                        cy={baselineY - 3}
-                                        r="3.5"
-                                        fill="#cbd5e1"
+                                    {/* Bar */}
+                                    {day.value > 0 && (
+                                        <rect
+                                            x={x}
+                                            y={y}
+                                            width={barWidth}
+                                            height={barHeight}
+                                            rx="6"
+                                            fill={isHovered ? 'url(#dashBarGradientHover)' : 'url(#dashBarGradient)'}
+                                            filter={isHovered ? 'url(#dashBarGlow)' : 'url(#dashBarShadow)'}
+                                            className="revenue-bar"
+                                            style={{
+                                                transformOrigin: `${centerX}px ${baselineY}px`,
+                                                transition: 'fill 0.2s ease, filter 0.2s ease',
+                                            }}
+                                        />
+                                    )}
+
+                                    {/* Dot if 0 */}
+                                    {day.value === 0 && (
+                                        <circle
+                                            cx={centerX}
+                                            cy={baselineY - 3}
+                                            r="3.5"
+                                            fill="#cbd5e1"
+                                        />
+                                    )}
+
+                                    {/* X label */}
+                                    <text
+                                        x={centerX}
+                                        y={baselineY + 20}
+                                        textAnchor="middle"
+                                        fontSize="11"
+                                        fontWeight={isHovered ? '600' : '500'}
+                                        fill={isHovered ? '#059669' : '#475569'}
+                                        fontFamily="var(--font-main)"
+                                        style={{ transition: 'fill 0.2s ease' }}
+                                    >
+                                        {day.label}
+                                    </text>
+
+                                    {/* Hit area for hover */}
+                                    <rect
+                                        x={margin.left + idx * step}
+                                        y={margin.top}
+                                        width={step}
+                                        height={innerHeight + margin.bottom}
+                                        fill="transparent"
+                                        style={{ cursor: 'pointer' }}
+                                        onMouseEnter={(e) => handleBarHover(idx, e)}
+                                        onMouseMove={(e) => handleBarHover(idx, e)}
                                     />
-                                )}
-
-                                {/* X label */}
-                                <text
-                                    x={centerX}
-                                    y={baselineY + 20}
-                                    textAnchor="middle"
-                                    fontSize="11"
-                                    fontWeight={isHovered ? '600' : '500'}
-                                    fill={isHovered ? '#059669' : '#475569'}
-                                    fontFamily="var(--font-main)"
-                                    style={{ transition: 'fill 0.2s ease' }}
-                                >
-                                    {day.label}
-                                </text>
-
-                                {/* Hit area for hover */}
-                                <rect
-                                    x={margin.left + idx * step}
-                                    y={margin.top}
-                                    width={step}
-                                    height={innerHeight + margin.bottom}
-                                    fill="transparent"
-                                    style={{ cursor: 'pointer' }}
-                                    onMouseEnter={(e) => handleBarHover(idx, e)}
-                                    onMouseMove={(e) => handleBarHover(idx, e)}
-                                />
-                            </g>
-                        );
-                    })}
-                </svg>
+                                </g>
+                            );
+                        })}
+                    </svg>
+                </div>
                 {data.every((d) => d.value === 0) && <div className="text-center text-muted small py-4">Chưa có doanh thu trong 7 ngày qua</div>}
             </div>
 
